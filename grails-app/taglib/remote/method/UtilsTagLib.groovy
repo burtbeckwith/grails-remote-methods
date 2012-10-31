@@ -42,10 +42,10 @@ class UtilsTagLib {
     }
 
     private def getMethods(def controller, def methods) {
-        if (controller.properties['methods'] == null && methods == null) {
-            throw new IllegalArgumentException("In tag 'defineRemote' you should specify methods attribute in tag or define list methods in controller")
+        if (!controller.hasProperty('remoteMethods') && methods == null) {
+            throw new IllegalArgumentException("In tag 'defineRemote' you should specify methods attribute in tag or define list remoteMethods in controller")
         }
 
-        methods ?: controller.methods
+        methods ?: controller.remoteMethods
     }
 }

@@ -7,7 +7,7 @@ To install plugin type:
 
 Usage: 
 
-1. Define on gsp (all attributes are optional, you can specify remote methods in controller as static property 'methods')
+1. Define on gsp (all attributes are optional, you can specify remote methods in controller as static property 'remoteMethods')
 
         <g:defineRemote controller="index" methods="['user_info']"/>
 
