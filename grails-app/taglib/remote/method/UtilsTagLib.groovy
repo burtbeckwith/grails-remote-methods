@@ -8,32 +8,30 @@ class UtilsTagLib {
     def grailsApplication
 
     Closure defineRemote = { attrs, body ->
-        javascript(null, {
-            def controller = getController(attrs.controller)
-            def methods = getMethods(controller, attrs.methods)
+        out << '<script type="text/javascript">'
+        def controller = getController(attrs.controller)
+        def methods = getMethods(controller, attrs.methods)
 
-            methods.each {
-                out << "var ${controller.controllerName} = {"
-                out << "${it}:function (params, success, error) {"
-                out << remoteFunction(
-                        controller: controller.controllerName,
-                        action: it,
-                        params: "params",
-                        onSuccess: "success(data, textStatus)",
-                        onFailure: """
+        methods.each {
+            out << "var ${controller.controllerName} = {"
+            out << "${it}:function (params, success, error) {"
+            out << remoteFunction(
+                    controller: controller.controllerName,
+                    action: it,
+                    params: "params",
+                    onSuccess: "success(data, textStatus)",
+                    onFailure: """
                     if (error) {
                         error(XMLHttpRequest,textStatus,errorThrown)
                     } else {
                         window.errorHandler(XMLHttpRequest,textStatus,errorThrown)
                     }
                     """
-                )
-                out << "}"
-            }
+            )
             out << "}"
-
-            null
-        })
+        }
+        out << "}"
+        out << '</script>'
     }
 
     private def getController(def name) {
