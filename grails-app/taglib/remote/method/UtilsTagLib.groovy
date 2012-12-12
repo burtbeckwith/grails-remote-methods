@@ -8,30 +8,32 @@ class UtilsTagLib {
     def grailsApplication
 
     Closure defineRemote = { attrs, body ->
-        out << '<script type="text/javascript">'
-        def controller = getController(attrs.controller)
-        def methods = getMethods(controller, attrs.methods)
+        javascript(null, {
+            def controller = getController(attrs.controller)
+            def methods = getMethods(controller, attrs.methods)
 
-        methods.each {
             out << "var ${controller.controllerName} = {"
-            out << "${it}:function (params, success, error) {"
-            out << remoteFunction(
-                    controller: controller.controllerName,
-                    action: it,
-                    params: "params",
-                    onSuccess: "success(data, textStatus)",
-                    onFailure: """
+            methods.each {
+                out << "${it}:function (params, success, error) {"
+                out << remoteFunction(
+                        controller: controller.controllerName,
+                        action: it,
+                        params: "params",
+                        onSuccess: "success(data, textStatus)",
+                        onFailure: """
                     if (error) {
                         error(XMLHttpRequest,textStatus,errorThrown)
                     } else {
                         window.errorHandler(XMLHttpRequest,textStatus,errorThrown)
                     }
                     """
-            )
+                )
+                out << "}"
+            }
             out << "}"
-        }
-        out << "}"
-        out << '</script>'
+
+            null
+        })
     }
 
     private def getController(def name) {
@@ -42,8 +44,8 @@ class UtilsTagLib {
     }
 
     private def getMethods(def controller, def methods) {
-        if (!controller.hasProperty('remoteMethods') && methods == null) {
-            throw new IllegalArgumentException("In tag 'defineRemote' you should specify methods attribute in tag or define list remoteMethods in controller")
+        if (controller.hasProperty('remoteMethods') == null && methods == null) {
+            throw new IllegalArgumentException("In tag 'defineRemote' you should specify methods attribute in tag or define list methods in controller")
         }
 
         methods ?: controller.remoteMethods
