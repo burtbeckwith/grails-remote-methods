@@ -28,9 +28,9 @@ class UtilsTagLib {
                     }
                     """
                 )
-                out << "}"
+                out << "},"
             }
-            out << "}"
+            out << "_:0}"
 
             null
         })
