@@ -1,13 +1,10 @@
 package remote.method
 
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
-import org.springframework.context.ApplicationContext
-
 class UtilsTagLib {
+
     def grailsApplication
 
-    Closure defineRemote = { attrs, body ->
+    def defineRemote = { attrs ->
         javascript(null, {
             def controller = getController(attrs.controller)
             def methods = getMethods(controller, attrs.methods)
@@ -36,14 +33,13 @@ class UtilsTagLib {
         })
     }
 
-    private def getController(def name) {
-        ApplicationContext applicationContext = (ApplicationContext) ServletContextHolder.getServletContext().getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
-        return applicationContext.getBean(
+    private getController(name) {
+        return grailsApplication.mainContext.getBean(
                 grailsApplication.getArtefactByLogicalPropertyName("Controller", name ?: controllerName).clazz.name
         )
     }
 
-    private def getMethods(def controller, def methods) {
+    private getMethods(controller, methods) {
         if (controller.hasProperty('remoteMethods') == null && methods == null) {
             throw new IllegalArgumentException("In tag 'defineRemote' you should specify methods attribute in tag or define list methods in controller")
         }
