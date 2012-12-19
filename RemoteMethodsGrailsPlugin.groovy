@@ -1,6 +1,6 @@
 class RemoteMethodsGrailsPlugin {
     def version = "0.1"
-    def grailsVersion = "2.1 > *"
+    def grailsVersion = "2.0 > *"
     def title = "Remote Methods Plugin"
     def author = "Alexey Kutuzov"
     def authorEmail = "welvet@gmail.com"
